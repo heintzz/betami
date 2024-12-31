@@ -1,3 +1,5 @@
+import { CompletionStatus } from './enums';
+
 export interface IActivity {
   id: string;
   title: string;
@@ -11,7 +13,7 @@ const activities: IActivity[] = [
   {
     id: '1',
     title: 'Morning Exercise',
-    status: 'done',
+    status: CompletionStatus.DONE,
     type: 'habit',
     category: 'exercise',
     createdAt: new Date(),
@@ -19,7 +21,7 @@ const activities: IActivity[] = [
   {
     id: '2',
     title: 'Baca Al Quran',
-    status: 'done',
+    status: CompletionStatus.DONE,
     type: 'habit',
     category: 'exercise',
     createdAt: new Date(),
@@ -27,7 +29,7 @@ const activities: IActivity[] = [
   {
     id: '3',
     title: 'Makan Enak',
-    status: 'lock',
+    status: CompletionStatus.LOCK,
     type: 'habit',
     category: 'exercise',
     createdAt: new Date(),

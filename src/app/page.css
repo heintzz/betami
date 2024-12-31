@@ -1,0 +1,18 @@
+.active-card {
+  color: white;
+  background: #c084fc;
+
+  .day {
+    font-weight: bold;
+    background-color: #7e22ce;
+  }
+}
+
+.inactive-card {
+  color: black;
+  background: rgba(128, 128, 128, 0.2);
+
+  .day {
+    background: rgba(128, 128, 128, 0.4);
+  }
+}

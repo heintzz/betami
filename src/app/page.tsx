@@ -2,6 +2,8 @@
 import '@/app/page.css';
 import activities from '@/helpers/data';
 import { useMemo, useState } from 'react';
+import ActivityList from './components/ActivityList';
+import HomeHeader from './components/HomeHeader';
 import HorizontalDatePicker from './components/HorizontalDatePicker';
 
 export default function Home() {
@@ -16,29 +18,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen max-w-[450px] p-8 bg-red-100 font-[family-name:var(--font-geist-mono)]">
+    <div className="min-h-screen max-w-[450px] flex flex-col gap-y-4 p-8 border font-[family-name:var(--font-geist-mono)]">
+      <HomeHeader date={selectedDate} />
       <HorizontalDatePicker
         selectDate={onSelectDate}
         selectedDate={selectedDate}
         position={position}
       />
-      {activities.map((activity) => {
-        return (
-          <div key={activity.id} className="flex justify-between">
-            <div className="flex">
-              <div id="category-icon"></div>
-              <div id="description" className="flex flex-col">
-                <p>{activity.title}</p>
-                <div className="flex gap-x-2">
-                  <p>{activity.type}</p>
-                  <p>{activity.id + ' PM'}</p>
-                </div>
-              </div>
-            </div>
-            <div id="status">{activity.status}</div>
-          </div>
-        );
-      })}
+      <ActivityList activities={activities} />
     </div>
   );
 }

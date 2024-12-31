@@ -1,4 +1,3 @@
-import NavMenu from '@/app/components/NavMenu';
 import SessionProvider from '@/app/components/SessionProvider';
 import '@/app/globals.css';
 import type { Metadata } from 'next';

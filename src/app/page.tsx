@@ -3,11 +3,13 @@ import '@/app/page.css';
 import activities from '@/helpers/data';
 import { useMemo, useState } from 'react';
 import ActivityList from './components/ActivityList';
+import DatePicker from './components/DatePicker';
 import HomeHeader from './components/HomeHeader';
 import HorizontalDatePicker from './components/HorizontalDatePicker';
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
+
   const position = useMemo(() => {
     return selectedDate.getDate();
   }, [selectedDate]);
@@ -26,6 +28,7 @@ export default function Home() {
         position={position}
       />
       <ActivityList activities={activities} />
+      <DatePicker date={selectedDate} />
     </div>
   );
 }

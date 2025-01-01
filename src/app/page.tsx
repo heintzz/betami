@@ -12,19 +12,32 @@ export default function Home() {
   const [dateMetadata, setDateMetadata] = useState({
     year: selectedDate.getFullYear(),
     month: selectedDate.getMonth(),
+    day: selectedDate.getDate(),
   });
   const position = useMemo(() => {
     return selectedDate.getDate();
   }, [selectedDate]);
 
   const onSelectDate = (day: number) => {
-    const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day, 0);
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth();
+    const newDate = new Date(year, month, day, 0);
     setSelectedDate(newDate);
+    setDateMetadata({
+      year,
+      month,
+      day,
+    });
   };
 
   const onSelectCustomDate = (day: number) => {
-    const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day, 0);
+    const year = dateMetadata.year;
+    const month = dateMetadata.month;
+    const newDate = new Date(year, month, day, 0);
     setSelectedDate(newDate);
+    setDateMetadata((prev) => {
+      return { ...prev, day };
+    });
   };
 
   return (
@@ -37,7 +50,7 @@ export default function Home() {
       />
       <ActivityList activities={activities} />
       <DatePicker
-        date={selectedDate}
+        selectedDate={selectedDate}
         selectDate={onSelectCustomDate}
         metadata={dateMetadata}
         setMetadata={setDateMetadata}

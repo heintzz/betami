@@ -12,9 +12,9 @@ export default function Home() {
   const [dateMetadata, setDateMetadata] = useState({
     year: selectedDate.getFullYear(),
     month: selectedDate.getMonth(),
-    day: selectedDate.getDate(),
   });
-  const position = useMemo(() => {
+
+  const selectedDay = useMemo(() => {
     return selectedDate.getDate();
   }, [selectedDate]);
 
@@ -26,7 +26,6 @@ export default function Home() {
     setDateMetadata({
       year,
       month,
-      day,
     });
   };
 
@@ -36,7 +35,7 @@ export default function Home() {
     const newDate = new Date(year, month, day, 0);
     setSelectedDate(newDate);
     setDateMetadata((prev) => {
-      return { ...prev, day };
+      return { ...prev };
     });
   };
 
@@ -46,7 +45,7 @@ export default function Home() {
       <HorizontalDatePicker
         selectDate={onSelectDate}
         selectedDate={selectedDate}
-        position={position}
+        position={selectedDay}
       />
       <ActivityList activities={activities} />
       <DatePicker
@@ -54,6 +53,7 @@ export default function Home() {
         selectDate={onSelectCustomDate}
         metadata={dateMetadata}
         setMetadata={setDateMetadata}
+        position={selectedDay}
       />
     </div>
   );

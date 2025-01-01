@@ -13,6 +13,7 @@ interface IDateElement {
   tempDate: Date;
   isActive: boolean;
   selectDate?: (day: number) => void;
+  position: number;
 }
 
 interface IDatePicker {
@@ -20,12 +21,12 @@ interface IDatePicker {
   selectDate: (day: number) => void;
   metadata: ITempDateMetadata;
   setMetadata: Dispatch<SetStateAction<ITempDateMetadata>>;
+  position: number;
 }
 
 interface ITempDateMetadata {
   year: number;
   month: number;
-  day: number;
 }
 
 const ArrayBuilder = (total: number) => {
@@ -36,9 +37,8 @@ const ArrayBuilder = (total: number) => {
 };
 
 const DateElement = (props: IDateElement) => {
-  const { days, actualDate, tempDate, isActive, selectDate = null } = props;
+  const { days, actualDate, tempDate, isActive, position, selectDate = null } = props;
 
-  const indexSelected = tempDate?.getDate();
   const hasSameYearAndMonth =
     actualDate.getMonth() === tempDate.getMonth() &&
     actualDate.getFullYear() === tempDate.getFullYear();
@@ -64,10 +64,10 @@ const DateElement = (props: IDateElement) => {
         }}
         className={`min-h-12 grid place-content-center rounded-xl cursor-pointer ${
           isActive
-            ? dayIndex == indexSelected && hasSameYearAndMonth
+            ? dayIndex == position && hasSameYearAndMonth
               ? 'text-white bg-purple-500'
               : 'text-black bg-gray-100'
-            : dayIndex == indexSelected && previousOrNextMonth
+            : dayIndex == position && previousOrNextMonth
             ? 'text-white bg-purple-100'
             : 'text-gray-200'
         }`}
@@ -79,11 +79,11 @@ const DateElement = (props: IDateElement) => {
   });
 };
 
-const DatePicker = ({ selectedDate, selectDate, metadata, setMetadata }: IDatePicker) => {
+const DatePicker = ({ selectedDate, selectDate, metadata, setMetadata, position }: IDatePicker) => {
   // BUG: kalo milih 31 trus nextnya bulannya cuma 28 dia ga bakal ngebug
   const { metadataDate, preceedingCalendarDates, activeDates, remainingDates } = useMemo(() => {
-    const { year, month, day } = metadata;
-    const metadataDate = new Date(year, month, day);
+    const { year, month } = metadata;
+    const metadataDate = new Date(year, month);
     const total = DateHelper.getDaysInMonth(metadataDate);
     const startIndex = DateHelper.getDayIndex(DateHelper.getDayName(metadataDate, 1));
     const previousMonthDays = DateHelper.getDaysInPreviousMonth(metadataDate);
@@ -141,6 +141,7 @@ const DatePicker = ({ selectedDate, selectDate, metadata, setMetadata }: IDatePi
           actualDate={selectedDate}
           tempDate={metadataDate}
           isActive={false}
+          position={position}
         />
         <DateElement
           days={activeDates}
@@ -148,12 +149,14 @@ const DatePicker = ({ selectedDate, selectDate, metadata, setMetadata }: IDatePi
           tempDate={metadataDate}
           isActive={true}
           selectDate={selectDate}
+          position={position}
         />
         <DateElement
           days={remainingDates}
           actualDate={selectedDate}
           tempDate={metadataDate}
           isActive={false}
+          position={position}
         />
       </div>
     </div>

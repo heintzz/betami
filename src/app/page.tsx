@@ -9,7 +9,10 @@ import HorizontalDatePicker from './components/HorizontalDatePicker';
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
-
+  const [dateMetadata, setDateMetadata] = useState({
+    year: selectedDate.getFullYear(),
+    month: selectedDate.getMonth(),
+  });
   const position = useMemo(() => {
     return selectedDate.getDate();
   }, [selectedDate]);
@@ -19,8 +22,13 @@ export default function Home() {
     setSelectedDate(newDate);
   };
 
+  const onSelectCustomDate = (day: number) => {
+    const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day, 0);
+    setSelectedDate(newDate);
+  };
+
   return (
-    <div className="min-h-screen max-w-[450px] flex flex-col gap-y-4 p-8 border font-[family-name:var(--font-geist-mono)]">
+    <div className="min-h-screen w-screen max-w-[450px] flex flex-col gap-y-4 p-8 border font-[family-name:var(--font-geist-mono)]">
       <HomeHeader date={selectedDate} />
       <HorizontalDatePicker
         selectDate={onSelectDate}
@@ -28,7 +36,12 @@ export default function Home() {
         position={position}
       />
       <ActivityList activities={activities} />
-      <DatePicker date={selectedDate} />
+      <DatePicker
+        date={selectedDate}
+        selectDate={onSelectCustomDate}
+        metadata={dateMetadata}
+        setMetadata={setDateMetadata}
+      />
     </div>
   );
 }

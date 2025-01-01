@@ -15,6 +15,22 @@ const DateHelper = {
   getDayIndex: (dayName: string): number => {
     return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].findIndex((a) => a === dayName);
   },
+  getMonthName: (monthIndex: number): string => {
+    return [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+    ][monthIndex];
+  },
 };
 
 export default DateHelper;

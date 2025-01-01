@@ -21,7 +21,7 @@ export default function HorizontalDatePicker({
             key={i}
             className={`flex flex-col w-[60px] h-20 rounded-2xl ${
               position == day ? 'active-card' : 'inactive-card'
-            }`}
+            } cursor-pointer`}
             onClick={() => selectDate(day)}
           >
             <p className="text-center mt-1">{DateHelper.getDayName(selectedDate, day)}</p>

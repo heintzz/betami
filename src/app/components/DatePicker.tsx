@@ -1,17 +1,26 @@
 import DateHelper from '@/helpers/date';
-import { useMemo } from 'react';
+import { Dispatch, SetStateAction, useMemo } from 'react';
 
 interface IDateElement {
   days: Array<number>;
-  isActive?: boolean;
-  // selectDate: () => void;
+  date?: Date;
+  selectDate?: (day: number) => void;
 }
 
-// TODO
-// interface IDatePicker {
-//   date: Date;
-//   onSelected: () => void;
-// }
+interface IDatePicker {
+  date: Date;
+  selectDate: (day: number) => void;
+  metadata: {
+    year: number;
+    month: number;
+  };
+  setMetadata: Dispatch<
+    SetStateAction<{
+      year: number;
+      month: number;
+    }>
+  >;
+}
 
 const ArrayBuilder = (total: number) => {
   return Array.from({ length: total }, (_, v) => {
@@ -21,27 +30,34 @@ const ArrayBuilder = (total: number) => {
 };
 
 const DateElement = (props: IDateElement) => {
-  const { days, isActive } = props;
+  const { days, date, selectDate = null } = props;
+  const isActive = date ? true : false;
+  const indexSelected = date && date.getDate();
 
   return days.map((dayIndex) => {
     return (
-      <p
+      <div
         onClick={() => {
           if (!isActive) return;
-          alert('hi');
+          if (selectDate) selectDate(dayIndex);
         }}
-        className={`min-h-12 grid place-content-center ${
-          isActive ? 'text-black' : 'text-gray-200'
+        className={`min-h-12 grid place-content-center rounded-xl cursor-pointer ${
+          isActive
+            ? dayIndex == indexSelected
+              ? 'text-white bg-purple-500'
+              : 'text-black bg-gray-100'
+            : 'text-gray-200'
         }`}
         key={dayIndex}
       >
         {dayIndex}
-      </p>
+      </div>
     );
   });
 };
 
-const DatePicker = ({ date }: { date: Date }) => {
+const DatePicker = ({ date, selectDate, metadata, setMetadata }: IDatePicker) => {
+  /* TODO: re-calculate the calendar layout  on metadata change */
   const { preceedingCalendarDates, activeDates, remainingDates } = useMemo(() => {
     const total = DateHelper.getDaysInMonth(date);
     const startIndex = DateHelper.getDayIndex(DateHelper.getDayName(date, 1));
@@ -58,10 +74,45 @@ const DatePicker = ({ date }: { date: Date }) => {
   }, [date]);
 
   return (
-    <div className="grid grid-cols-7 grid-rows-6 text-center">
-      <DateElement days={preceedingCalendarDates} />
-      <DateElement days={activeDates} isActive={true} />
-      <DateElement days={remainingDates} />
+    <div className="border rounded-t-2xl p-4 absolute z-10 bottom-0 w-[100%] max-w-[450px] -translate-x-8 ">
+      <div className="flex justify-between">
+        <button
+          onClick={() =>
+            setMetadata((prev) => {
+              const isNegative = prev.month - 1 < 0;
+              return {
+                year: isNegative ? prev.year - 1 : prev.year,
+                month: isNegative ? 11 : prev.month - 1,
+              };
+            })
+          }
+        >
+          &lt;
+        </button>
+        <div className="text-center mb-4">
+          <p className="font-bold">{DateHelper.getMonthName(metadata.month)}</p>
+          <p>{metadata.year}</p>
+        </div>
+        <button
+          onClick={() =>
+            setMetadata((prev) => {
+              const isBiggerThanEleven = prev.month + 1 > 11;
+              return {
+                year: isBiggerThanEleven ? prev.year + 1 : prev.year,
+                month: isBiggerThanEleven ? 0 : prev.month + 1,
+              };
+            })
+          }
+        >
+          &gt;
+        </button>
+      </div>
+
+      <div className="grid grid-cols-7 grid-rows-6 text-center gap-2">
+        <DateElement days={preceedingCalendarDates} />
+        <DateElement days={activeDates} date={date} selectDate={selectDate} />
+        <DateElement days={remainingDates} />
+      </div>
     </div>
   );
 };

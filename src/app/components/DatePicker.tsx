@@ -22,9 +22,11 @@ interface IDatePicker {
   metadata: ITempDateMetadata;
   setMetadata: Dispatch<SetStateAction<ITempDateMetadata>>;
   position: number;
+  openModal: () => void;
+  toggleCalendar: () => void;
 }
 
-interface ITempDateMetadata {
+export interface ITempDateMetadata {
   year: number;
   month: number;
 }
@@ -62,11 +64,11 @@ const DateElement = (props: IDateElement) => {
           if (!isActive) return;
           if (selectDate) selectDate(dayIndex);
         }}
-        className={`min-h-12 grid place-content-center rounded-xl cursor-pointer ${
+        className={`min-h-12 grid place-content-center rounded-xl  ${
           isActive
             ? dayIndex == position && hasSameYearAndMonth
-              ? 'text-white bg-purple-500'
-              : 'text-black bg-gray-100'
+              ? 'text-white bg-purple-500 cursor-pointer'
+              : 'text-black bg-gray-100 cursor-pointer'
             : dayIndex == position && previousOrNextMonth
             ? 'text-white bg-purple-100'
             : 'text-gray-200'
@@ -79,7 +81,15 @@ const DateElement = (props: IDateElement) => {
   });
 };
 
-const DatePicker = ({ selectedDate, selectDate, metadata, setMetadata, position }: IDatePicker) => {
+const DatePicker = ({
+  selectedDate,
+  selectDate,
+  metadata,
+  setMetadata,
+  position,
+  openModal,
+  toggleCalendar,
+}: IDatePicker) => {
   // BUG: kalo milih 31 trus nextnya bulannya cuma 28 dia ga bakal ngebug
   const { metadataDate, preceedingCalendarDates, activeDates, remainingDates } = useMemo(() => {
     const { year, month } = metadata;
@@ -99,8 +109,8 @@ const DatePicker = ({ selectedDate, selectDate, metadata, setMetadata, position 
   }, [metadata]);
 
   return (
-    <div className="border rounded-t-2xl p-4 absolute z-10 bottom-0 w-[100%] max-w-[450px] -translate-x-8 ">
-      <div className="flex justify-between">
+    <div className="border bg-white rounded-t-2xl pt-4 pb-0 absolute z-10 bottom-0 w-[100%] max-w-[450px] -translate-x-8">
+      <div className="flex justify-between px-4">
         <button
           onClick={() =>
             setMetadata((prev) => {
@@ -115,7 +125,7 @@ const DatePicker = ({ selectedDate, selectDate, metadata, setMetadata, position 
         >
           &lt;
         </button>
-        <div className="text-center mb-4">
+        <div className="text-center mb-4 cursor-pointer" onClick={openModal}>
           <p className="font-bold">{DateHelper.getMonthName(metadata.month)}</p>
           <p>{metadata.year}</p>
         </div>
@@ -135,7 +145,7 @@ const DatePicker = ({ selectedDate, selectDate, metadata, setMetadata, position 
         </button>
       </div>
 
-      <div className="grid grid-cols-7 grid-rows-6 text-center gap-2">
+      <div className="grid grid-cols-7 grid-rows-6 text-center gap-2 px-4">
         <DateElement
           days={preceedingCalendarDates}
           actualDate={selectedDate}
@@ -159,6 +169,9 @@ const DatePicker = ({ selectedDate, selectDate, metadata, setMetadata, position 
           position={position}
         />
       </div>
+      <button className="text-center py-2 border w-full" onClick={toggleCalendar}>
+        Close
+      </button>
     </div>
   );
 };

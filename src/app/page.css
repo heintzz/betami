@@ -10,9 +10,11 @@
 
 .inactive-card {
   color: black;
-  background: rgba(128, 128, 128, 0.2);
+  /* background: rgba(128, 128, 128, 0.2); */
+  border: solid 1px black;
 
   .day {
-    background: rgba(128, 128, 128, 0.4);
+    /* background: rgba(128, 128, 128, 0.4); */
+    border: solid 1px black;
   }
 }

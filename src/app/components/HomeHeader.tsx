@@ -1,14 +1,13 @@
-import React from 'react';
 import { MdOutlineCalendarMonth } from 'react-icons/md';
 
-const HomeHeader = ({ date }: { date: Date }) => {
+const HomeHeader = ({ date, toggleCalendar }: { date: Date; toggleCalendar: () => void }) => {
   const today = new Date();
   const isToday =
     date.getDate() == today.getDate() &&
     date.getMonth() == today.getMonth() &&
     date.getFullYear() == today.getFullYear();
   return (
-    <header className="flex justify-between items-center">
+    <header className="flex justify-between items-center cursor-pointer" onClick={toggleCalendar}>
       <p>
         {isToday && 'Today, '}
         {date.toLocaleDateString('id-ID', {

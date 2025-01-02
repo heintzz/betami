@@ -1,15 +1,18 @@
 'use client';
 import '@/app/page.css';
 import activities from '@/helpers/data';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ActivityList from './components/ActivityList';
 import CalendarModal from './components/CalendarModal';
 import DatePicker, { ITempDateMetadata } from './components/DatePicker';
 import HomeHeader from './components/HomeHeader';
 import HorizontalDatePicker from './components/HorizontalDatePicker';
+import { FaPlus } from 'react-icons/fa';
+import ActivityAction from './components/ActivityAction';
 
 export default function Home() {
   const [openCalendar, setOpenCalendar] = useState(false);
+  const [openAction, setOpenAction] = useState(false);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [dateMetadata, setDateMetadata] = useState({
@@ -58,8 +61,24 @@ export default function Home() {
     setShowCalendarModal((prev) => !prev);
   };
 
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
+        setOpenAction(false);
+        setOpenCalendar(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen w-screen max-w-[450px] flex flex-col gap-y-4 p-8 border font-[family-name:var(--font-geist-mono)]">
+    <div className="relative min-h-screen w-screen max-w-[450px] flex flex-col gap-y-4 p-8 border font-[family-name:var(--font-geist-mono)]">
       <HomeHeader date={selectedDate} toggleCalendar={toggleCalendar} />
       <HorizontalDatePicker
         selectDate={onSelectDate}
@@ -68,15 +87,17 @@ export default function Home() {
       />
       <ActivityList activities={activities} />
       {openCalendar && (
-        <DatePicker
-          selectedDate={selectedDate}
-          selectDate={onSelectCustomDate}
-          metadata={dateMetadata}
-          setMetadata={setDateMetadata}
-          position={selectedDay}
-          openModal={toggleCalendarModal}
-          toggleCalendar={toggleCalendar}
-        />
+        <div ref={drawerRef}>
+          <DatePicker
+            selectedDate={selectedDate}
+            selectDate={onSelectCustomDate}
+            metadata={dateMetadata}
+            setMetadata={setDateMetadata}
+            position={selectedDay}
+            openModal={toggleCalendarModal}
+            toggleCalendar={toggleCalendar}
+          />
+        </div>
       )}
       <CalendarModal
         isOpen={showCalendarModal}
@@ -84,6 +105,17 @@ export default function Home() {
         onSave={updateMetadata}
         metadata={dateMetadata}
       />
+      {openAction && (
+        <div ref={drawerRef}>
+          <ActivityAction />
+        </div>
+      )}
+      <div
+        className="border bg-white rounded-full grid place-content-center w-8 h-8 absolute z-2 bottom-8 right-5"
+        onClick={() => setOpenAction(true)}
+      >
+        <FaPlus />
+      </div>
     </div>
   );
 }

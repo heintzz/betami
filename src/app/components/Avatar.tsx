@@ -1,16 +1,15 @@
-import { ActivityStatus } from '@/helpers/activity';
 import React from 'react';
 
 interface AvatarProps {
-  status: string;
+  background: string;
+  size?: number;
   children?: React.ReactNode;
 }
 
-const Avatar = ({ status, children = null }: AvatarProps) => {
-  const background = ActivityStatus.getActivityStatusColor(status);
+const Avatar = ({ background, size = 12, children = null }: AvatarProps) => {
   return (
     <div
-      className="w-12 h-12 rounded-full grid  place-content-center"
+      className={`w-${size} h-${size} rounded-full grid  place-content-center`}
       style={{
         background: background,
       }}

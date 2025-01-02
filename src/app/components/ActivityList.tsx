@@ -29,7 +29,7 @@ const ActivityList = (props: IActivityList) => {
                 </div>
               </div>
             </div>
-            <Avatar status={activity.status}>
+            <Avatar background={ActivityStatus.getActivityStatusColor(activity.status)}>
               {ActivityStatus.getActivityStatusIcon(activity.status)}
             </Avatar>
           </div>

@@ -109,7 +109,7 @@ const DatePicker = ({
   }, [metadata]);
 
   return (
-    <div className="border bg-white rounded-t-2xl pt-4 pb-0 absolute z-10 bottom-0 w-[100%] max-w-[450px] -translate-x-8">
+    <div className="absolute z-10 bottom-0 left-0 right-0 border bg-white rounded-t-2xl pt-4 pb-0">
       <div className="flex justify-between px-4">
         <button
           onClick={() =>
